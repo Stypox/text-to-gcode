@@ -33,16 +33,20 @@ class Letter:
 			for line in args[0].split('\n'):
 				if line != "":
 					self.instructions.append(Instr(line))
-		elif len(args) == 1 and type(args[0]) is list:
+
+			pointsOnX = [instr.x for instr in self.instructions]
+			self.width = max(pointsOnX) - min(pointsOnX)
+		elif len(args) == 2 and type(args[0]) is list and type(args[1]) is float:
 			self.instructions = args[0]
+			self.width = args[1]
 		else:
-			raise TypeError("Letter() takes one (str) or one (list) arguments")		
+			raise TypeError("Letter() takes one (str) or two (list, float) arguments")		
 	
 	def __repr__(self):
 		return "\n".join([repr(instr) for instr in self.instructions])
 	
 	def translated(self, x, y):
-		return Letter([instr.translated(x, y) for instr in self.instructions])
+		return Letter([instr.translated(x, y) for instr in self.instructions], self.width)
 
 def readLetters(directory):
 	letters = {}
