@@ -44,7 +44,7 @@ class Letter:
 			raise TypeError("Letter() takes one (str) or two (list, float) arguments")		
 	
 	def __repr__(self):
-		return "\n".join([repr(instr) for instr in self.instructions])
+		return "\n".join([repr(instr) for instr in self.instructions]) + "\n"
 	
 	def translated(self, x, y):
 		return Letter([instr.translated(x, y) for instr in self.instructions], self.width)
