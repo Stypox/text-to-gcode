@@ -2,6 +2,7 @@
 
 from enum import Enum
 import os
+from math import inf as infinity
 
 class Instr:
 	class Type(Enum):
@@ -49,7 +50,10 @@ class Letter:
 		return Letter([instr.translated(x, y) for instr in self.instructions], self.width)
 
 def readLetters(directory):
-	letters = {}
+	letters = {
+		" ": Letter([], 4.0),
+		"\n": Letter([], infinity)
+	}
 	for root,_,filenames in os.walk(directory):
 		for filename in filenames:
 			file = open(os.path.join(root,filename),"r")
