@@ -3,6 +3,7 @@
 from enum import Enum
 import os
 from math import inf as infinity
+import argparse
 
 class Instr:
 	class Type(Enum):
@@ -62,10 +63,38 @@ def readLetters(directory):
 			letters[letterRepr] = letter
 	return letters
 
+def saveGcode(letters, string, outputFilename, lineLength, lineSpacing, padding):
+	offsetX, offsetY = 0, 0
+	with open(outputFilename, "w") as file:
+		for char in string:
+			letter = letters[char].translated(offsetX, offsetY)
+			file.write(repr(letter))
+
+			offsetX += letter.width + padding
+			if offsetX >= lineLength:
+				offsetX = 0
+				offsetY -= lineSpacing
+
+class Args:
+	pass
 def main(argv):
-	letters = readLetters("./ascii_gcode/")
-	print(*[k for k,v in letters.items()])
-	print(letters["A"].translated(1, 1))
+	argParser = argparse.ArgumentParser()
+	argParser.add_argument_group("Data options:")
+	argParser.add_argument("-i", "--input", help="File to read characters from", type=str)
+	argParser.add_argument("-o", "--output", help="File in which to save the gcode result", type=str, required=True)
+	argParser.add_argument("-g", "--gcode-directory", help="Directory containing the gcode information for all used characters", type=str, default="./ascii_gcode/")
+	argParser.add_argument_group("Text options:")
+	argParser.add_argument("-l", "--line-length", help="Maximum length of a line", type=float)
+	argParser.add_argument("-s", "--line-spacing", help="Distance between two subsequent lines", type=float, default=8.0)
+	argParser.add_argument("-p", "--padding", help="Empty space between characters", type=float, default=1.5)
+
+	argParser.parse_args(namespace=Args)
+	argParser.print_help()
+
+	letters = readLetters(Args.gcode_directory)
+	if hasattr(Args, "input"):
+		Args.data = open(Args.input).read()
+	saveGcode(letters, Args.data, Args.output, Args.line_length, Args.line_spacing, Args.padding)
 
 if __name__ == '__main__':
 	from sys import argv
