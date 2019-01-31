@@ -89,7 +89,6 @@ def main(argv):
 	argParser.add_argument("-p", "--padding", help="Empty space between characters", type=float, default=1.5)
 
 	argParser.parse_args(namespace=Args)
-	argParser.print_help()
 
 	letters = readLetters(Args.gcode_directory)
 	if hasattr(Args, "input"):
