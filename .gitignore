@@ -1,5 +1,5 @@
 .vscode/
-
+__pycache__/
 
 input.txt
 output.nc
