@@ -21,7 +21,7 @@ class Instr:
 			self.type, self.x, self.y = args
 		else:
 			raise TypeError("Instr() takes one (str) or three (Instr.Type, float, float) arguments")
-	
+
 	def __repr__(self):
 		return "G%d X%.2f Y%.2f" % (self.type.value[0], self.x, self.y)
 
@@ -42,13 +42,14 @@ class Letter:
 			self.instructions = args[0]
 			self.width = args[1]
 		else:
-			raise TypeError("Letter() takes one (str) or two (list, float) arguments")		
-	
+			raise TypeError("Letter() takes one (str) or two (list, float) arguments")	
+
 	def __repr__(self):
 		return "\n".join([repr(instr) for instr in self.instructions]) + "\n"
-	
+
 	def translated(self, x, y):
 		return Letter([instr.translated(x, y) for instr in self.instructions], self.width)
+
 
 def readLetters(directory):
 	letters = {
@@ -76,8 +77,9 @@ def textToGcode(letters, text, lineLength, lineSpacing, padding):
 		if offsetX >= lineLength:
 			offsetX = 0
 			offsetY -= lineSpacing
-	
+
 	return "".join(gcodeLettersArray)
+
 
 def parseArgs(namespace):
 	argParser = argparse.ArgumentParser(fromfile_prefix_chars="@",
@@ -111,6 +113,7 @@ def main():
 	data = Args.input.read()
 	gcode = textToGcode(letters, data, Args.line_length, Args.line_spacing, Args.padding)
 	Args.output.write(gcode)
+
 
 if __name__ == '__main__':
 	main()
