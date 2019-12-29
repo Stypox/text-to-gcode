@@ -63,38 +63,53 @@ def readLetters(directory):
 			letters[letterRepr] = letter
 	return letters
 
-def saveGcode(letters, string, outputFilename, lineLength, lineSpacing, padding):
-	offsetX, offsetY = 0, 0
-	with open(outputFilename, "w") as file:
-		for char in string:
-			letter = letters[char].translated(offsetX, offsetY)
-			file.write(repr(letter))
+def textToGcode(letters, text, lineLength, lineSpacing, padding):
+	# used for fast string concatenation
+	gcodeLettersArray = []
 
-			offsetX += letter.width + padding
-			if offsetX >= lineLength:
-				offsetX = 0
-				offsetY -= lineSpacing
+	offsetX, offsetY = 0, 0
+	for char in text:
+		letter = letters[char].translated(offsetX, offsetY)
+		gcodeLettersArray.append(repr(letter))
+
+		offsetX += letter.width + padding
+		if offsetX >= lineLength:
+			offsetX = 0
+			offsetY -= lineSpacing
+	
+	return "".join(gcodeLettersArray)
+
+def parseArgs(namespace):
+	argParser = argparse.ArgumentParser()
+
+	argParser.add_argument_group("Data options")
+	argParser.add_argument("-i", "--input", type=argparse.FileType('r'), default="-", metavar="FILE",
+		help="File to read characters from")
+	argParser.add_argument("-o", "--output", type=argparse.FileType('w'), required=True, metavar="FILE",
+		help="File in which to save the gcode result")
+	argParser.add_argument("-g", "--gcode-directory", type=str, default="./ascii_gcode/", metavar="DIR",
+		help="Directory containing the gcode information for all used characters")
+
+	argParser.add_argument_group("Text options")
+	argParser.add_argument("-l", "--line-length", type=float, required=True,
+		help="Maximum length of a line")
+	argParser.add_argument("-s", "--line-spacing", type=float, default=8.0,
+		help="Distance between two subsequent lines")
+	argParser.add_argument("-p", "--padding", type=float, default=1.5,
+		help="Empty space between characters")
+
+	argParser.parse_args(namespace=namespace)
 
 class Args:
 	pass
-def main(argv):
-	argParser = argparse.ArgumentParser()
-	argParser.add_argument_group("Data options:")
-	argParser.add_argument("-i", "--input", help="File to read characters from", type=str)
-	argParser.add_argument("-o", "--output", help="File in which to save the gcode result", type=str, required=True)
-	argParser.add_argument("-g", "--gcode-directory", help="Directory containing the gcode information for all used characters", type=str, default="./ascii_gcode/")
-	argParser.add_argument_group("Text options:")
-	argParser.add_argument("-l", "--line-length", help="Maximum length of a line", type=float)
-	argParser.add_argument("-s", "--line-spacing", help="Distance between two subsequent lines", type=float, default=8.0)
-	argParser.add_argument("-p", "--padding", help="Empty space between characters", type=float, default=1.5)
 
-	argParser.parse_args(namespace=Args)
+def main():
+	parseArgs(Args)
 
 	letters = readLetters(Args.gcode_directory)
-	if hasattr(Args, "input"):
-		Args.data = open(Args.input).read()
-	saveGcode(letters, Args.data, Args.output, Args.line_length, Args.line_spacing, Args.padding)
+	data = Args.input.read()
+	gcode = textToGcode(letters, data, Args.line_length, Args.line_spacing, Args.padding)
+	Args.output.write(gcode)
 
 if __name__ == '__main__':
-	from sys import argv
-	main(argv)
+	main()
