@@ -2,7 +2,7 @@
 
 from enum import Enum
 import os
-from math import inf as infinity
+import math
 import argparse
 
 class Instr:
@@ -53,7 +53,7 @@ class Letter:
 def readLetters(directory):
 	letters = {
 		" ": Letter([], 4.0),
-		"\n": Letter([], infinity)
+		"\n": Letter([], math.inf)
 	}
 	for root,_,filenames in os.walk(directory):
 		for filename in filenames:
