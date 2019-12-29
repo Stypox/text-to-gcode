@@ -80,7 +80,8 @@ def textToGcode(letters, text, lineLength, lineSpacing, padding):
 	return "".join(gcodeLettersArray)
 
 def parseArgs(namespace):
-	argParser = argparse.ArgumentParser()
+	argParser = argparse.ArgumentParser(fromfile_prefix_chars="@",
+		description="Compiles text into 2D gcode for plotters")
 
 	argParser.add_argument_group("Data options")
 	argParser.add_argument("-i", "--input", type=argparse.FileType('r'), default="-", metavar="FILE",
