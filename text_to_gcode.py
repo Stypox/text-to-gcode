@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+#pylint: disable=no-member
 
 from enum import Enum
 import os
