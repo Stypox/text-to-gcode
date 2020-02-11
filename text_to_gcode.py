@@ -43,7 +43,7 @@ class Letter:
 			self.instructions = args[0]
 			self.width = args[1]
 		else:
-			raise TypeError("Letter() takes one (str) or two (list, float) arguments")	
+			raise TypeError("Letter() takes one (str) or two (list, float) arguments")
 
 	def __repr__(self):
 		return "\n".join([repr(instr) for instr in self.instructions]) + "\n"
