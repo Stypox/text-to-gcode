@@ -104,10 +104,8 @@ def parseArgs(namespace):
 
 	argParser.parse_args(namespace=namespace)
 
-class Args:
-	pass
-
 def main():
+	class Args: pass
 	parseArgs(Args)
 
 	letters = readLetters(Args.gcode_directory)
