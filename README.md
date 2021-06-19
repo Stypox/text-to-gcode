@@ -3,6 +3,7 @@
 This repository contains a Python 3 script that takes a **text file as input** and generates a **2D G-code file as output**. The alphabet contained in the `ascii_gcode` subfolder supports **all ASCII characters** and is used by default, producing letters made up of just **single lines**, like you can see in the image below. The parameters that you can tune are the directory in which to look for the G-code alphabet, the maximum length of a line, the distance between two subsequent lines and the empty space between characters. You can then **use the produced G-code in a 2D plotter**, you may find this other project of mine useful: [plotter](https://github.com/Stypox/plotter).
 
 ![An example with Lorem Ipsum and all supported characters](./example.png)
+<sup>Obtained with http://jherrm.com/gcode-viewer/</sup>
 
 ## Usage
 
